@@ -2,21 +2,19 @@ import sqlite3
 from tkinter import messagebox
 import tkinter as tk
 
-
 root = tk.Tk()
-root.title('Cars')
-root.geometry('+50+50')
+root.title("Cars")
+root.geometry("+50+50")
 root.resizable(False, False)
-root.configure(bg='cyan')
-
-
+root.configure(bg="cyan")
 
 
 def createtable():
-    conn = sqlite3.connect('Cars.db')
+    conn = sqlite3.connect("Cars.db")
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS Cars (
         ID INTEGER PRIMARY KEY,
         Cars_Name TEXT NOT NULL,
@@ -25,8 +23,8 @@ def createtable():
         Color TEXT NOT NULL,
         Price REAL NOT NULL
     )
-    ''')
-
+    """
+    )
     conn.commit()
     conn.close()
 
@@ -39,34 +37,32 @@ def add_car():
     Price = entry_Price.get()
 
     if Cars_name and Model and NumberPlate and Color and Price:
-        conn = sqlite3.connect('Cars.db')
+        conn = sqlite3.connect("Cars.db")
         cursor = conn.cursor()
 
-        sql_query = 'INSERT INTO Cars(Cars_Name, Model, NumberPlate, Color, Price) VALUES (?, ?, ?, ?, ?)'
+        sql_query = "INSERT INTO Cars(Cars_Name, Model, NumberPlate, Color, Price) VALUES (?, ?, ?, ?, ?)"
         values = (Cars_name, Model, NumberPlate, Color, Price)
 
         cursor.execute(sql_query, values)
         conn.commit()
         conn.close()
 
-        messagebox.showinfo('Mesaj', 'Araba başarı ile listeye eklendi')
+        messagebox.showinfo("Mesaj", "Araba başarı ile listeye eklendi")
         show_employees()
 
     else:
-        messagebox.showerror('Hata', 'Lütfen tüm alanları doldurun')
+        messagebox.showerror("Hata", "Lütfen tüm alanları doldurun")
 
 
 def delete_car():
     selected_id = entry_id.get()
-    conn = sqlite3.connect('Cars.db')
+    conn = sqlite3.connect("Cars.db")
     cursor = conn.cursor()
 
-    cursor.execute('DELETE FROM Cars WHERE ID = ?', (selected_id,))
+    cursor.execute("DELETE FROM Cars WHERE ID = ?", (selected_id,))
     messagebox.showwarning("Mesaj", "Araba silindi!")
     conn.commit()
     conn.close()
-
-    show_employees()
 
 
 def update_employee():
@@ -77,39 +73,36 @@ def update_employee():
     Color = entry_Color.get()
     Price = entry_Price.get()
 
-    conn = sqlite3.connect('Cars.db')
+    conn = sqlite3.connect("Cars.db")
     cursor = conn.cursor()
 
-    cursor.execute('UPDATE Cars SET Cars_Name = ?, Model = ?, NumberPlate = ?, Color = ?, Price = ? WHERE ID = ?',
-                   (Cars_name, Model, NumberPlate, Color, Price, selected_id))
+    cursor.execute(
+        "UPDATE Cars SET Cars_Name = ?, Model = ?, NumberPlate = ?, Color = ?, Price = ? WHERE ID = ?",
+        (Cars_name, Model, NumberPlate, Color, Price, selected_id),
+    )
     messagebox.showwarning("Mesaj", "Araba güncellendi")
     conn.commit()
     conn.close()
 
-    show_employees()
-
 
 def show_employees():
-    conn = sqlite3.connect('Cars.db')
+    conn = sqlite3.connect("Cars.db")
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM Cars')
+    cursor.execute("SELECT * FROM Cars")
     Cars = cursor.fetchall()
 
     Cars_list.delete(0, tk.END)
     for car in Cars:  # Dikkat: cars yerine car olarak değiştirildi
-        Cars_list.insert(tk.END, f"ID:{car[0]} CarsName:{car[1]}, Model:{car[2]}, NumberPlate:{car[3]}, Color:{car[4]}, Price:{car[5]}")
+        Cars_list.insert(
+            tk.END,
+            f"ID:{car[0]} CarsName:{car[1]}, Model:{car[2]}, NumberPlate:{car[3]}, Color:{car[4]}, Price:{car[5]}",
+        )
 
     conn.close()
-    
-    
-    
-    
-    
-    
+
+
 createtable()
-
-
 
 label_Cars_name = tk.Label(root, text="Araç Adı:")
 label_Cars_name.grid(row=0, column=0, padx=10, pady=5, sticky="e")
